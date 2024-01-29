@@ -49,7 +49,9 @@ const todoRouter= require("./routes/todo.js")
 const app = express();
 var PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+origin:"https://todo-frontend-livid.vercel.app/"
+}));
 database.connect();
 app.use("/api/v1/auth",authRouter);
 app.use("/api/v1/todo",todoRouter);
