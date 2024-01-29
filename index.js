@@ -39,22 +39,38 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-const express = require("express");
-require("dotenv").config();
-const cors = require('cors');
-const bodyParser = require("body-parser");
-const database = require("./config/database.js");
-const authRouter= require("./routes/auth.js")
-const todoRouter= require("./routes/todo.js")
-const app = express();
-var PORT = process.env.PORT || 3000;
-app.use(bodyParser.json());
-app.use(cors({
-origin:"https://todo-frontend-livid.vercel.app/"
-}));
-database.connect();
-app.use("/api/v1/auth",authRouter);
-app.use("/api/v1/todo",todoRouter);
-app.listen(PORT, () => {
-  console.log("listening on port " + PORT);
-});
+  const express = require("express");
+  require("dotenv").config();
+  const cors = require('cors');
+  const bodyParser = require("body-parser");
+  const database = require("./config/database.js");
+  const authRouter = require("./routes/auth.js");
+  const todoRouter = require("./routes/todo.js");
+  
+  const app = express();
+  const PORT = process.env.PORT || 3000;
+  
+  // Middleware
+  app.use(bodyParser.json());
+  app.use(cors({
+    origin: "https://todo-frontend-livid.vercel.app",
+  }));
+  
+  // Database connection
+  database.connect();
+  
+  // Routes
+  app.use("/api/v1/auth", authRouter);
+  app.use("/api/v1/todo", todoRouter);
+  
+  // Error handling middleware
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+  });
+  
+  // Start the server
+  app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+  });
+  
